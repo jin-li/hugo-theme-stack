@@ -30,6 +30,7 @@
     {{ partialCached "article/components/photoswipe" . }}
 {{ end }}
 
+
 {{ define "left-sidebar" }}
     {{ if (.Scratch.Get "hasTOC") }}
         <div id="article-toolbar">
@@ -44,9 +45,39 @@
 {{ end }}
 
 {{ define "right-sidebar" }}
-    {{ if (.Scratch.Get "hasTOC") }}
-        <aside class="sidebar right-sidebar sticky">
-            <section class="widget archives">
+    <aside class="sidebar right-sidebar sticky">
+        <section class="widget archives">
+            <!--
+            {{ if (default false .Site.Params.colorScheme.toggle) }}
+                <li id="dark-mode-toggle">
+                    {{ partial "helper/icon" "toggle-left" }}
+                    {{ partial "helper/icon" "toggle-right" }}
+                    <pre> </pre><span>{{ T "darkMode" }}</span>
+                </li>
+            {{ end }}
+            -->
+
+            {{ if .Site.IsMultiLingual }}
+                {{ $siteLanguages := .Site.Languages}}
+                {{ $pageLang := .Page.Lang}}
+                {{ range .Page.AllTranslations }}
+                    {{ $translation := .}}
+                    {{ range $siteLanguages }}
+                        {{ if eq $translation.Lang .Lang }}
+                            {{ $selected := false }}
+                            {{ if eq $pageLang .Lang}}
+                            {{ else }}
+                                <p style = "margin:20px" ></p>
+                                <div class="language-select">
+                                    <li id="selected">{{ partial "helper/icon" "trans" }}<pre> </pre><a href="{{ $translation.RelPermalink }}"><span>{{ .LanguageName }}</span></a></li>
+                                </div>
+                            {{ end }}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+
+            {{ if (.Scratch.Get "hasTOC") }}
                 <div class="widget-icon">
                     {{ partial "helper/icon" "hash" }}
                 </div>
@@ -55,7 +86,7 @@
                 <div class="widget--toc">
                     {{ .TableOfContents }}
                 </div>
-            </section>
-        </aside>
-    {{ end }}
+            {{ end }}
+        </section>
+    </aside>
 {{ end }}

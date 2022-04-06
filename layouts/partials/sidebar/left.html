@@ -35,22 +35,19 @@
         <h2 class="site-description">{{ .Site.Params.sidebar.subtitle }}</h2>
 
         {{- with .Site.Menus.social -}}
-            <ol class="social-menu">
-                {{ range . }}
-                    <li>
-                        <a 
-                            href='{{ .URL }}'
-                            {{ if eq (default true .Params.newTab) true }}target="_blank"{{ end }}
-                            {{ with .Name }}title="{{ . }}"{{ end }}
-                        >
-                            {{ $icon := default "link" .Params.Icon }}
-                            {{ with $icon }}
-                                {{ partial "helper/icon" . }}
-                            {{ end }}
-                        </a>
-                    </li>
-                {{ end }}
-            </ol>
+        <ol class="social-menu">
+            {{ range . }}
+                <li>
+                    <a 
+                        class="{{ .Identifier }}" href="{{ .URL }}" 
+                        {{ with .Name }}title="{{ . }}"{{ end }}
+                        {{ if eq (default true .Params.newTab) true }}target="_blank"{{ end }}
+                    >
+                        <i class="icon-{{ .Params.Icon }}"></i>
+                    </a>
+                </li>
+            {{ end }}
+        </ol>
         {{- end -}}
     </header>
 
@@ -80,5 +77,59 @@
                 <span>{{ T "darkMode" }}</span>
             </li>
         {{ end }}
+<!---
+        {{ if .IsTranslated }}
+        <div class="language-select">
+            <li id="selected">{{ partial "helper/icon" "world" }}<span>{{ .Language.LanguageName }}</span></li>
+            {{ range .Translations }}
+                <li id="to-select"><a href="{{ .Permalink }}"><span>{{ .Language.LanguageName }}</span></a></li>
+            {{ end}}
+        </div>
+        {{ end }}
+-->
+
+        {{ if .Site.IsMultiLingual }}
+            {{ $siteLanguages := .Site.Languages}}
+            {{ $pageLang := .Page.Lang}}
+            {{ range .Page.AllTranslations }}
+                {{ $translation := .}}
+                {{ range $siteLanguages }}
+                    {{ if eq $translation.Lang .Lang }}
+                        {{ $selected := false }}
+                        {{ if eq $pageLang .Lang}}
+                        {{ else }}
+                            <div class="language-select">
+                                <li id="selected">{{ partial "helper/icon" "trans" }}<a href="{{ $translation.RelPermalink }}"><span>{{ .LanguageName }}</span></a></li>
+                            </div>
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+
+<!---
+        {{ if .Site.IsMultiLingual }}
+        <li id="language-switch" class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-globe" aria-hidden="true"></i></a>
+        <ul class="dropdown-menu">
+        {{ $siteLanguages := .Site.Languages}}
+        {{ $pageLang := .Page.Lang}}
+        {{ range .Page.AllTranslations }}
+            {{ $translation := .}}
+            {{ range $siteLanguages }}
+                {{ if eq $translation.Lang .Lang }}
+                    {{ $selected := false }}
+                    {{ if eq $pageLang .Lang}}
+                        <li><a href="{{ $translation.RelPermalink }}" class="active">{{ .LanguageName }}</a></li>
+                    {{ else }}
+                        <li><a href="{{ $translation.RelPermalink }}">{{ .LanguageName }}</a></li>
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+        </ul>
+        </li>
+        {{ end }}
+--->
     </ol>
 </aside>

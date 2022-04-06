@@ -47,3 +47,11 @@ search:
 
     resultTitle:
         other: "#PAGES_COUNT 个结果 （用时 #TIME_SECONDS 秒）"
+
+footer:
+    builtWith:
+        other: 由 {{ .Generator }} 框架驱动
+
+    designedBy:
+        other: Hugo主题 {{ .Theme }} 由 {{ .DesignedBy }} 设计
+        
