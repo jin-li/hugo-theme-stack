@@ -14,10 +14,12 @@
         {{ end }}
 
         {{- $Generator := `<a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>` -}}
-        {{- $Theme := printf `<b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="%s">Stack</a></b>` $ThemeVersion -}}
-        {{- $DesignedBy := `<a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>` -}}
+        {{- $Theme1 := printf `<b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="%s">Stack</a></b>` $ThemeVersion -}}
+        {{- $DesignedBy1 := `<a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>` -}}
+        {{- $Theme2 := printf `<b><a href="https://github.com/ineesalmeida/almeida-cv" target="_blank" rel="noopener" data-version="%s">almeida-cv</a></b>` $ThemeVersion -}}
+        {{- $DesignedBy2 := `<a href="https://github.com/ineesalmeida/almeida-cv" target="_blank" rel="noopener">Almeida</a>` -}}
 
         {{ T "footer.builtWith" (dict "Generator" $Generator) | safeHTML }} <br />
-        {{ T "footer.designedBy" (dict "Theme" $Theme "DesignedBy" $DesignedBy) | safeHTML }}
+        {{ T "footer.designedBy" (dict "Theme1" $Theme1 "DesignedBy1" $DesignedBy1 "Theme2" $Theme2 "DesignedBy2" $DesignedBy2) | safeHTML }}
     </section>
 </footer>
