@@ -9,7 +9,20 @@
 ///     Height: Image height
 ///     Width: Image width
 
-{{ $result := "" }}
+/// Note: 
+///     For remote images, to avoid getting stuck in downloading an image, 
+///     we directly return the image URL without checking its validity. 
+///     So for remote images, the returned Permalink may be invalid if the 
+///     image URL is invalid. Please make sure the image URL is valid when 
+///     using remote images.
+
+{{ $result := dict
+    "Local" false
+    "Resource" nil
+    "Permalink" nil
+    "Height" nil
+    "Width" nil
+}}
 
 {{ if .Image }}
     {{ $url := urls.Parse .Image }}
@@ -17,15 +30,13 @@
     {{ if not (in (slice "https" "http") $url.Scheme) }}
         {{ $resource = .Resources.Get (printf "%s" (.Image | safeURL)) }}
     {{ else }}
-        {{ with try (resources.GetRemote $url) }}
-            {{ with .Err }}
-                {{ errorf "%s" . }}
-            {{ else with .Value }}
-                {{ $resource = . }}
-            {{ else }}
-                {{ errorf "Unable to get remote resource %q" $url }}
-            {{ end }}
-        {{ end }}   
+        {{ $result = dict
+            "Local" false
+            "Resource" nil
+            "Permalink" .Image
+            "Height" nil
+            "Width" nil
+        }}
     {{ end }}
 
     {{ if $resource }}
@@ -38,7 +49,7 @@
                 "Height" nil
                 "Width" nil
             }}
-        {{- else -}}            
+        {{- else -}}
             {{- $result = dict
                 "Local" true
                 "Resource" $resource
